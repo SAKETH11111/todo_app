@@ -1,5 +1,5 @@
 class TasksController < ApplicationController
-  before_action :set_task, only: %i[show edit update destroy]
+  before_action :set_task, only: %i[show edit update destroy toggle]
 
   def index
     @tasks = Task.ordered
@@ -22,16 +22,13 @@ class TasksController < ApplicationController
       respond_to do |format|
         format.turbo_stream do
           @tasks = Task.ordered
-          render turbo_stream: turbo_stream.replace("tasks-list", partial: "tasks/list", locals: { tasks: @tasks })
+          render turbo_stream: turbo_stream.update("tasks-list", partial: "tasks/list", locals: { tasks: @tasks })
         end
         format.html { redirect_to tasks_path, notice: "Task was successfully created." }
       end
     else
       respond_to do |format|
-        format.turbo_stream do
-          @tasks = Task.ordered
-          render turbo_stream: turbo_stream.replace("tasks-list", partial: "tasks/list", locals: { tasks: @tasks })
-        end
+        format.turbo_stream { render :new, status: :unprocessable_entity }
         format.html { render :new, status: :unprocessable_entity }
       end
     end
@@ -41,17 +38,25 @@ class TasksController < ApplicationController
     if @task.update(task_params)
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("task_#{@task.id}", partial: "tasks/task_card", locals: { task: @task })
+          render turbo_stream: turbo_stream.update("task_#{@task.id}", partial: "tasks/task_card", locals: { task: @task })
         end
         format.html { redirect_to tasks_path, notice: "Task was successfully updated." }
       end
     else
       respond_to do |format|
-        format.turbo_stream do
-          render turbo_stream: turbo_stream.replace("task_#{@task.id}", partial: "tasks/task_card", locals: { task: @task })
-        end
+        format.turbo_stream { render :edit, status: :unprocessable_entity }
         format.html { render :edit, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def toggle
+    @task.update(completed: !@task.completed?)
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.update("task_#{@task.id}", partial: "tasks/task_card", locals: { task: @task })
+      end
+      format.html { redirect_to tasks_path, notice: "Task marked as #{@task.completed? ? 'completed' : 'incomplete'}." }
     end
   end
 

@@ -1,0 +1,39 @@
+<%= form_with model: task, class: "space-y-4" do |f| %>
+  <% if task.errors.any? %>
+    <div class="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
+      <ul class="list-disc pl-5">
+        <% task.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="space-y-2">
+    <label class="text-sm text-[var(--foreground)] opacity-80">Title</label>
+    <%= f.text_field :title, required: true, placeholder: "e.g., Pay rent", class: "w-full px-3 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--border)]" %>
+  </div>
+
+  <div class="space-y-2">
+    <label class="text-sm text-[var(--foreground)] opacity-80">Description</label>
+    <%= f.text_area :description, rows: 4, placeholder: "Details (optional)", class: "w-full px-3 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--border)]" %>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div class="space-y-2">
+      <label class="text-sm text-[var(--foreground)] opacity-80">Due date</label>
+      <%= f.date_field :due_date, class: "w-full px-3 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--border)]" %>
+    </div>
+    <div class="space-y-2">
+      <label class="text-sm text-[var(--foreground)] opacity-80">Priority</label>
+      <%= f.select :priority, options_for_select(Task.priorities.keys.map { |k| [k.titleize, k] }, task.priority || "normal"), {}, class: "w-full px-3 py-2 rounded-xl bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:ring-2 focus:ring-[var(--border)]" %>
+    </div>
+  </div>
+
+  <div class="mt-4 flex items-center justify-end gap-2">
+    <% if local_assigns[:cancel_path] && local_assigns[:cancel_frame] %>
+      <%= link_to "Cancel", cancel_path, data: { turbo_frame: cancel_frame }, class: "px-4 py-2 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:opacity-90" %>
+    <% end %>
+    <%= f.submit "Save", class: "px-4 py-2 rounded-xl border border-[var(--border)] bg-[var(--card)] text-[var(--foreground)] hover:opacity-90" %>
+  </div>
+<% end %>

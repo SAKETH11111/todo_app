@@ -1,0 +1,41 @@
+<% bg = case task.priority
+  when "highest" then "#fed7aa"
+  when "high" then "#c4b5fd"
+  when "normal" then "#bbf7d0"
+  when "low" then "#bfdbfe"
+  else "#e5e7eb"
+end %>
+
+<div class="relative">
+  <%= link_to "", edit_task_path(task), data: { turbo_frame: "task_#{task.id}" }, class: "absolute inset-0 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[var(--border)]", aria: { label: "Edit task" } %>
+
+  <div class="rounded-2xl p-4 shadow-sm-var hover:shadow-md-var hover-scale-card transition-all animate-card-pop <%= 'opacity-60' if task.completed? %>" style="background-color: <%= bg %>;">
+    <h3 class="font-semibold text-[#111827] mb-2 <%= 'line-through' if task.completed? %>"><%= task.title %></h3>
+    <p class="text-xs text-[#374151] mb-3"><%= (task.due_date || task.created_at.to_date).strftime('%-d %b %Y') %></p>
+
+    <% if task.description.present? %>
+      <p class="text-sm text-[#111827] opacity-80 line-clamp-3"><%= task.description %></p>
+    <% else %>
+      <p class="text-sm text-[#111827] opacity-80 line-clamp-3">No description provided.</p>
+    <% end %>
+
+    <div class="mt-4 flex justify-between items-center relative z-10">
+      <%= link_to "/tasks/#{task.id}/toggle",
+                  data: { turbo_method: :patch, turbo_frame: "task_#{task.id}" },
+                  class: "inline-flex items-center justify-center w-8 h-8 rounded-full border border-[var(--border)] bg-[var(--card)]/70 hover:opacity-90 transition",
+                  title: (task.completed? ? "Mark as incomplete" : "Mark as complete"),
+                  aria: { label: (task.completed? ? "Mark as incomplete" : "Mark as complete") } do %>
+        <iconify-icon icon="<%= task.completed? ? 'mdi:check-circle' : 'mdi:circle-outline' %>" class="w-5 h-5 text-[#111827]"></iconify-icon>
+      <% end %>
+
+      <% icon_name = case task.priority
+          when "highest" then "mdi:basketball"
+          when "high" then "mdi:soccer"
+          when "normal" then "mdi:check"
+          when "low" then "mdi:snowflake"
+          else "mdi:note-outline"
+        end %>
+      <iconify-icon icon="<%= icon_name %>" class="w-5 h-5 text-[#111827]"></iconify-icon>
+    </div>
+  </div>
+</div>

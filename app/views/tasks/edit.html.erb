@@ -1,0 +1,10 @@
+<turbo-frame id="task_<%= @task.id %>">
+  <div class="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 shadow-sm-var">
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-base font-semibold text-[var(--foreground)]">Edit Task</h2>
+      <%= link_to "Cancel", task_path(@task), data: { turbo_frame: "task_#{@task.id}" }, class: "px-3 py-1.5 rounded-xl border border-[var(--border)] text-[var(--foreground)] hover:opacity-90" %>
+    </div>
+
+    <%= render "tasks/form", task: @task, cancel_path: task_path(@task), cancel_frame: "task_#{@task.id}" %>
+  </div>
+</turbo-frame>
