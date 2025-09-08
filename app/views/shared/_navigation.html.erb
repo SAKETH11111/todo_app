@@ -1,0 +1,24 @@
+<% mobile = local_assigns.fetch(:mobile, false) %>
+
+<% base_link = "transition-colors" %>
+<% desktop_link = "text-sm font-medium text-slate-700 hover:text-slate-900 dark:text-slate-200 dark:hover:text-white" %>
+<% desktop_active = "text-slate-900 dark:text-white" %>
+<% mobile_link = "block px-4 py-3 text-base font-medium text-slate-800 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-800/70" %>
+<% mobile_active = "bg-slate-100 dark:bg-slate-800/70" %>
+
+<% if mobile %>
+  <%= link_to tasks_path, class: [base_link, mobile_link, (current_page?(tasks_path) ? mobile_active : nil)].compact.join(" "), aria: { current: (current_page?(tasks_path) ? "page" : nil) } do %>
+    Tasks
+  <% end %>
+  <%= link_to new_task_path, class: [base_link, mobile_link, (current_page?(new_task_path) ? mobile_active : nil)].compact.join(" "), aria: { current: (current_page?(new_task_path) ? "page" : nil) } do %>
+    New Task
+  <% end %>
+<% else %>
+  <%= link_to tasks_path, class: [base_link, desktop_link, (current_page?(tasks_path) ? desktop_active : nil)].compact.join(" "), aria: { current: (current_page?(tasks_path) ? "page" : nil) } do %>
+    Tasks
+  <% end %>
+  <%= link_to new_task_path, class: "inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-white/10 hover:brightness-110" do %>
+    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6"/></svg>
+    New Task
+  <% end %>
+<% end %>

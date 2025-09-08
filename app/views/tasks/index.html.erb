@@ -1,0 +1,43 @@
+<div class="px-4 sm:px-5 lg:px-6 py-6">
+  <h1 class="text-3xl font-bold mb-4 text-[var(--foreground)]">Your Tasks</h1>
+  <div class="flex items-center justify-between mb-3">
+    <select class="px-4 py-2 bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] rounded-lg">
+      <option>Personal</option>
+      <option>Work</option>
+      <option>All</option>
+    </select>
+    <div class="flex items-center gap-2">
+      <div class="flex gap-1">
+        <button class="p-2 hover:bg-[var(--muted)] rounded" aria-label="Grid View">
+          <iconify-icon icon="mdi:view-grid-outline" class="w-5 h-5"></iconify-icon>
+        </button>
+        <button class="p-2 hover:bg-[var(--muted)] rounded" aria-label="List View">
+          <iconify-icon icon="mdi:view-list-outline" class="w-5 h-5"></iconify-icon>
+        </button>
+      </div>
+      <%= link_to new_task_path, class: "inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--card)]" do %>
+        <iconify-icon icon="mdi:plus" class="w-5 h-5"></iconify-icon>
+      <% end %>
+    </div>
+  </div>
+  <div class="-mx-4 px-4 overflow-x-auto">
+    <div class="flex gap-2 w-max">
+      <button class="px-4 py-1.5 rounded-full border pill text-sm">#All</button>
+      <button class="px-4 py-1.5 rounded-full border pill text-sm">#work</button>
+      <button class="px-4 py-1.5 rounded-full border pill-active text-sm">#Personal</button>
+      <button class="px-4 py-1.5 rounded-full border pill text-sm">#Fitness</button>
+    </div>
+  </div>
+</div>
+<div class="px-4 sm:px-5 lg:px-6">
+  <turbo-frame id="tasks-list">
+    <%= render "tasks/list", tasks: @tasks %>
+  </turbo-frame>
+</div>
+<div class="hidden lg:block">
+  <%= link_to new_task_path, class: "fixed bottom-6 right-6 w-14 h-14 bg-[var(--card)] rounded-2xl shadow-lg-var hover:shadow-xl-var transition-all hover:scale-110 flex items-center justify-center border border-[var(--border)]" do %>
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+    </svg>
+  <% end %>
+</div>
