@@ -20,13 +20,27 @@ end %>
     <% end %>
 
     <div class="mt-4 flex justify-between items-center relative z-10">
-      <%= link_to "/tasks/#{task.id}/toggle",
-                  data: { turbo_method: :patch, turbo_frame: "task_#{task.id}" },
-                  class: "inline-flex items-center justify-center w-8 h-8 rounded-full border border-[var(--border)] bg-[var(--card)]/70 hover:opacity-90 transition",
-                  title: (task.completed? ? "Mark as incomplete" : "Mark as complete"),
-                  aria: { label: (task.completed? ? "Mark as incomplete" : "Mark as complete") } do %>
+      <%= button_to task_path(task),
+                    params: { task: { completed: !task.completed? } },
+                    method: :patch,
+                    form: { data: { turbo_frame: "task_#{task.id}" } },
+                    class: "inline-flex items-center justify-center w-8 h-8 rounded-full border border-[var(--border)] bg-[var(--card)]/70 hover:opacity-90 transition",
+                    title: (task.completed? ? "Mark as incomplete" : "Mark as complete"),
+                    aria: { label: (task.completed? ? "Mark as incomplete" : "Mark as complete") } do %>
         <iconify-icon icon="<%= task.completed? ? 'mdi:check-circle' : 'mdi:circle-outline' %>" class="w-5 h-5 text-[#111827]"></iconify-icon>
       <% end %>
+
+      <button
+        type="button"
+        data-controller="bridge--confirm"
+        data-action="click->bridge--confirm#request"
+        data-bridge-id-param="<%= task.id %>"
+        data-bridge-title-param="<%= j(task.title.presence || 'this task') %>"
+        class="inline-flex items-center justify-center w-8 h-8 rounded-full border border-[var(--border)] bg-[var(--card)]/70 hover:bg-[var(--muted)] transition"
+        title="Delete task"
+        aria-label="Delete task">
+        <iconify-icon icon="mdi:trash-can-outline" class="w-5 h-5 text-[#111827]"></iconify-icon>
+      </button>
 
       <% icon_name = case task.priority
           when "highest" then "mdi:basketball"

@@ -1,0 +1,17 @@
+{
+  "rules": [
+    {
+      "patterns": ["^/$"],
+      "properties": {
+        "presentation": "clear_all"
+      }
+    },
+    {
+      "patterns": ["/tasks/new$", "/tasks/\\d+/edit$"],
+      "properties": {
+        "context": "modal",
+        "pull_to_refresh_enabled": false
+      }
+    }
+  ]
+}
